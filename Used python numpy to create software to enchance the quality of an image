@@ -1,0 +1,33 @@
+#! C:\Users\ADITYA TEOTIA\Desktop\Coding\Numpy\myenv\Scripts\python.exe
+import cv2
+import numpy as np
+from matplotlib import pyplot as plt
+
+# Read the input image
+img = cv2.imread('input_image.jpg', 0)
+
+# Perform Fourier Transform
+f_img = np.fft.fft2(img)
+fshift = np.fft.fftshift(f_img)
+
+# Apply Low-pass filter for smoothing
+rows, cols = img.shape
+crow, ccol = rows // 2, cols // 2
+mask = np.zeros((rows, cols), np.uint8)
+mask[crow-10:crow+10, ccol-10:ccol+10] = 1
+fshift_smoothed = fshift * mask
+
+# Apply High-pass filter for sharpening
+mask_sharpen = np.ones((rows, cols), np.uint8)
+mask_sharpen[crow-5:crow+5, ccol-5:ccol+5] = 0
+fshift_sharpened = fshift * mask_sharpen
+
+# Inverse Fourier Transform
+img_smoothed = np.abs(np.fft.ifft2(np.fft.ifftshift(fshift_smoothed)))
+img_sharpened = np.abs(np.fft.ifft2(np.fft.ifftshift(fshift_sharpened)))
+
+# Display input and enhanced images
+plt.subplot(131), plt.imshow(img, cmap='gray'), plt.title('Input Image')
+plt.subplot(132), plt.imshow(img_smoothed, cmap='gray'), plt.title('Smoothed Image')
+plt.subplot(133), plt.imshow(img_sharpened, cmap='gray'), plt.title('Sharpened Image')
+plt.show()
