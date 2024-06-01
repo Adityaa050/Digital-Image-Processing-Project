@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from matplotlib import pyplot as plt
 
-# Read the input image
+# Read the input image from computer
 img = cv2.imread('input_image.jpg', 0)
 
 # Perform Fourier Transform
